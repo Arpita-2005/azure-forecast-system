@@ -1,7 +1,7 @@
-<h1 align="center">Cloud Service Demand Forecasting</h1>
+<h1 align="center">Azure Cloud Service Demand Forecasting</h1>
 
 <p align="center">
-Milestone 1 & Milestone 2 – Data Preparation & Feature Engineering
+Data Analytics Project – Time Series Demand Modeling
 </p>
 
 <hr>
@@ -10,22 +10,22 @@ Milestone 1 & Milestone 2 – Data Preparation & Feature Engineering
 
 <p>
 This project focuses on forecasting cloud service demand using structured time-series data.
-The objective is to transform raw cloud operational data into a model-ready dataset
-through cleaning, feature engineering, and structured data wrangling.
+The objective is to transform raw operational data into a model-ready dataset
+through systematic preprocessing and feature engineering.
 </p>
 
 <hr>
 
 <!-- ===================== MILESTONE 1 ===================== -->
 
-<h1>🚀 Milestone 1 (Weeks 1–2)</h1>
+<h1>🚀 Milestone 1 – Week 1 & Week 2</h1>
 
-<h2>📅 Week 1 – Data Collection & Understanding</h2>
+<h2>📅 Module: Data Collection & Understanding</h2>
 
 <h3>🎯 Objective</h3>
 <p>
 Understand the dataset structure, validate business metrics,
-and perform initial preprocessing.
+clean inconsistencies, and prepare a structured baseline dataset.
 </p>
 
 <h3>📂 Dataset Attributes</h3>
@@ -45,102 +45,69 @@ and perform initial preprocessing.
 <li>Handled missing values appropriately</li>
 <li>Validated availability ratio within 0–1 range</li>
 <li>Explored regional and service-based usage patterns</li>
-<li>Prepared clean baseline dataset</li>
-</ul>
-
-<hr>
-
-<h2>📅 Week 2 – Feature Engineering & Data Wrangling</h2>
-
-<h3>🎯 Objective</h3>
-<p>
-Enhance predictive power of dataset by creating time-series and business-driven features.
-</p>
-
-<h3>🧠 Features Engineered</h3>
-
-<h4>1️⃣ Time-Based Features</h4>
-<ul>
-<li>hour – Captures intraday patterns</li>
-<li>day – Captures daily variation</li>
-<li>weekday – Identifies weekday vs weekend behavior</li>
-</ul>
-
-<h4>2️⃣ Lag Features (Historical Memory)</h4>
-<ul>
-<li>lag_1_usage – Previous period usage</li>
-<li>lag_7_usage – Weekly recurring usage pattern</li>
-</ul>
-
-<h4>3️⃣ Rolling Features</h4>
-<ul>
-<li>rolling_mean_3 – 3-period moving average</li>
-</ul>
-
-<h4>4️⃣ Business Indicator</h4>
-<ul>
-<li>usage_spike – Anomaly detection flag</li>
-</ul>
-
-<h4>5️⃣ Categorical Encoding</h4>
-<ul>
-<li>One-hot encoding for region and service</li>
-<li>drop_first=True used to prevent multicollinearity</li>
+<li>Ensured consistent data schema</li>
 </ul>
 
 <h3>📊 Outcome of Milestone 1</h3>
 <ul>
-<li>Clean and structured dataset</li>
-<li>Time-aware feature enrichment</li>
-<li>Business-aligned indicators</li>
-<li>Model-ready data schema</li>
+<li>Clean and validated dataset</li>
+<li>Structured time-series format</li>
+<li>Business metrics verified</li>
+<li>Baseline dataset ready for feature engineering</li>
 </ul>
 
 <hr>
 
 <!-- ===================== MILESTONE 2 ===================== -->
 
-<h1>🚀 Milestone 2 (Weeks 3–4)</h1>
+<h1>🚀 Milestone 2 – Week 3 & Week 4</h1>
 
-<h2>📌 Module: Advanced Feature Engineering & Data Transformation</h2>
+<h2>📅 Module: Feature Engineering & Data Wrangling</h2>
 
 <h3>🎯 Objective</h3>
 <p>
-Prepare the dataset for machine learning modeling by enriching features
-and ensuring consistent schema and granularity.
+Enhance predictive capability by engineering time-series
+and business-driven features to prepare data for modeling.
 </p>
 
-<h3>🛠 Tasks Completed</h3>
+<h3>🧠 Features Engineered</h3>
 
-<h4>1️⃣ Demand-Driving Feature Identification</h4>
+<h4>1️⃣ Time-Based Features</h4>
 <ul>
-<li>Analyzed usage trends across regions</li>
-<li>Evaluated impact of service uptime (availability_ratio)</li>
-<li>Assessed customer behavior patterns</li>
+<li>hour – Captures intraday demand patterns</li>
+<li>day – Captures daily variation</li>
+<li>weekday – Identifies weekday vs weekend trends</li>
 </ul>
 
-<h4>2️⃣ Derived Feature Engineering</h4>
+<h4>2️⃣ Lag Features (Historical Memory)</h4>
 <ul>
-<li>Seasonality flags (weekday/weekend indicators)</li>
-<li>Usage spike detection</li>
-<li>Lag variables for short-term and weekly memory</li>
-<li>Rolling averages for trend smoothing</li>
+<li>lag_1_usage – Previous time-period usage</li>
+<li>lag_7_usage – Weekly recurring pattern</li>
 </ul>
 
-<h4>3️⃣ Data Reshaping & Wrangling</h4>
+<h4>3️⃣ Rolling Features</h4>
 <ul>
-<li>Grouped calculations by region and service</li>
-<li>Ensured chronological ordering before lag creation</li>
-<li>Maintained consistent schema across transformations</li>
-<li>Prepared final structured dataset for modeling</li>
+<li>rolling_mean_3 – 3-period moving average for trend smoothing</li>
+</ul>
+
+<h4>4️⃣ Business & Anomaly Indicators</h4>
+<ul>
+<li>customer_growth_flag – Binary indicator of customer increase</li>
+<li>usage_spike – Flag for unusually high demand</li>
+</ul>
+
+<h4>5️⃣ Categorical Encoding</h4>
+<ul>
+<li>One-hot encoding for region and service category</li>
+<li>Used drop_first=True to prevent multicollinearity</li>
 </ul>
 
 <h3>📊 Outcome of Milestone 2</h3>
 <ul>
-<li>Fully enriched time-series dataset</li>
-<li>Model-ready feature matrix</li>
-<li>Improved predictive capability through engineered features</li>
-<li>Scalable structure for ML pipelines</li>
+<li>Time-aware enriched dataset</li>
+<li>Historical memory captured via lag features</li>
+<li>Business-aligned indicators added</li>
+<li>Fully model-ready structured dataset</li>
 </ul>
 
 <hr>
@@ -156,8 +123,10 @@ and ensuring consistent schema and granularity.
 
 <hr>
 
+<h2>📁 Repository Structure</h2>
+
 <hr>
 
 <p align="center">
-Cloud Analytics Project – Milestone 1 & 2
+Cloud Analytics Learning Project
 </p>
