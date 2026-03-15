@@ -161,3 +161,204 @@ print(df.head())
 
 #Step-7:Processed dataset
 df.to_csv("azure_based_processed_dataset.csv", index=False)
+
+#Week-3
+# Import Required Libraries
+
+import matplotlib.pyplot as plt
+
+from statsmodels.tsa.arima.model import ARIMA
+from xgboost import XGBRegressor
+
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.model_selection import GridSearchCV
+
+
+#Step-1: Extract additional time features from timestamp for machine learning models
+#These features help capture seasonal and calendar patterns in demand
+
+df["year"] = df["timestamp"].dt.year
+df["month"] = df["timestamp"].dt.month
+df["day"] = df["timestamp"].dt.day
+
+
+#Step-2: Define target variable and feature set for forecasting
+#actual_usage is the demand we want to predict
+
+X = df.drop(["actual_usage","timestamp"], axis=1)
+y = df["actual_usage"]
+
+
+#Step-3: Perform chronological train-test split to maintain time order
+#80% data for training and 20% for testing
+
+split_index = int(len(df) * 0.8)
+
+X_train = X.iloc[:split_index]
+X_test = X.iloc[split_index:]
+
+y_train = y.iloc[:split_index]
+y_test = y.iloc[split_index:]
+
+
+#Step-4: Train baseline ARIMA model using historical demand data
+#ARIMA captures time-series trends and past demand behaviour
+
+arima_model = ARIMA(y_train, order=(1,1,1))
+arima_fit = arima_model.fit()
+
+
+#Step-5: Generate ARIMA forecast for the test period
+
+arima_pred = arima_fit.forecast(steps=len(y_test))
+
+
+#Step-6: Train baseline XGBoost regression model
+#XGBoost uses engineered features to learn complex patterns in demand
+
+xgb_model = XGBRegressor(
+
+    n_estimators=200,
+    max_depth=5,
+    learning_rate=0.05,
+    random_state=42,
+    objective="reg:squarederror"
+
+)
+
+xgb_model.fit(X_train, y_train)
+
+
+#Step-7: Generate demand predictions using trained XGBoost model
+
+xgb_pred = xgb_model.predict(X_test)
+
+
+#Step-8: Evaluate baseline model performance using RMSE and MAE
+
+rmse_arima = np.sqrt(mean_squared_error(y_test, arima_pred))
+rmse_xgb = np.sqrt(mean_squared_error(y_test, xgb_pred))
+
+mae_arima = mean_absolute_error(y_test, arima_pred)
+mae_xgb = mean_absolute_error(y_test, xgb_pred)
+
+print("Baseline ARIMA RMSE:", rmse_arima)
+print("Baseline XGBoost RMSE:", rmse_xgb)
+
+print("Baseline ARIMA MAE:", mae_arima)
+print("Baseline XGBoost MAE:", mae_xgb)
+
+
+#Step-9: Calculate forecast bias to check if model consistently over or under predicts
+
+bias_arima = np.mean(arima_pred - y_test)
+bias_xgb = np.mean(xgb_pred - y_test)
+
+print("ARIMA Forecast Bias:", bias_arima)
+print("XGBoost Forecast Bias:", bias_xgb)
+
+
+#Step-10: Perform ARIMA hyperparameter tuning using grid search
+#This helps identify the best ARIMA configuration
+
+p = range(0,4)
+d = range(0,2)
+q = range(0,4)
+
+best_rmse = float("inf")
+best_order = None
+
+for i in p:
+    for j in d:
+        for k in q:
+            try:
+                model = ARIMA(y_train, order=(i,j,k))
+                result = model.fit()
+
+                pred = result.forecast(steps=len(y_test))
+
+                rmse = np.sqrt(mean_squared_error(y_test, pred))
+
+                if rmse < best_rmse:
+                    best_rmse = rmse
+                    best_order = (i,j,k)
+
+            except:
+                continue
+
+print("Best ARIMA Order:", best_order)
+
+
+#Step-11: Train final optimized ARIMA model using best parameters
+
+best_arima_model = ARIMA(y_train, order=best_order).fit()
+
+arima_tuned_pred = best_arima_model.forecast(steps=len(y_test))
+
+
+#Step-12: Define hyperparameter grid for XGBoost tuning
+
+param_grid = {
+
+    "n_estimators":[100,200,300],
+    "max_depth":[3,5,7],
+    "learning_rate":[0.01,0.05,0.1],
+    "subsample":[0.8,1]
+
+}
+
+
+#Step-13: Perform hyperparameter tuning using GridSearchCV
+
+grid_search = GridSearchCV(
+
+    estimator=XGBRegressor(objective="reg:squarederror", random_state=42),
+
+    param_grid=param_grid,
+
+    scoring="neg_mean_squared_error",
+
+    cv=3,
+
+    verbose=1
+
+)
+
+grid_search.fit(X_train, y_train)
+
+best_xgb = grid_search.best_estimator_
+
+
+#Step-14: Generate predictions using optimized XGBoost model
+
+xgb_tuned_pred = best_xgb.predict(X_test)
+
+
+#Step-15: Evaluate final tuned models
+
+rmse_arima_tuned = np.sqrt(mean_squared_error(y_test, arima_tuned_pred))
+rmse_xgb_tuned = np.sqrt(mean_squared_error(y_test, xgb_tuned_pred))
+
+print("Tuned ARIMA RMSE:", rmse_arima_tuned)
+print("Tuned XGBoost RMSE:", rmse_xgb_tuned)
+
+
+#Step-16: Visualize actual demand vs predicted demand
+
+plt.figure(figsize=(10,5))
+
+plt.plot(y_test.values, label="Actual Demand")
+
+plt.plot(arima_tuned_pred.values, label="ARIMA Forecast")
+
+plt.plot(xgb_tuned_pred, label="XGBoost Forecast")
+
+plt.legend()
+
+plt.title("Cloud Demand Forecast Comparison")
+
+plt.xlabel("Time")
+
+plt.ylabel("Usage Demand")
+
+plt.show()
