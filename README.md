@@ -227,11 +227,8 @@ cloud demand forecasts and support decision-making.
 <li>Streamlit</li>
 <li>Statsmodels (ARIMA)</li>
 <li>Scikit-learn</li>
+<li>VS Code</li>
 </ul>
-
-<hr>
-
-<h2>📁 Repository Structure</h2>
 
 <hr>
 
