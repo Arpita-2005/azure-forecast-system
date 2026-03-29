@@ -202,8 +202,8 @@ cloud demand forecasts and support decision-making.
 
 <h4>3️⃣ Deployment Links</h4>
 <ul>
-<li><b>Local URL:</b> http://localhost:8501</li>
-<li><b>Network URL:</b> http://192.168.31.59:8501</li>
+<li><b>Local URL:</b> http://localhost:8502/</li>
+<li><b>Video URL:</b>https://drive.google.com/file/d/1mFldCJ9E5oK9AK7ZLJMhYbFA7RGga0F3/view?usp=sharing</li>
 </ul>
 
 <h3>📊 Outcome of Milestone 4</h3>
